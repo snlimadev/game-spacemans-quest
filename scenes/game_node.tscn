@@ -1,0 +1,195 @@
+[gd_scene load_steps=18 format=3 uid="uid://cjgvx1duhy6mi"]
+
+[ext_resource type="Script" path="res://scripts/Game.gd" id="1_6yahp"]
+[ext_resource type="Texture2D" uid="uid://bf7id06bihqwr" path="res://assets/Spaceman/spr_spaceman_1.png" id="1_7efl4"]
+[ext_resource type="Texture2D" uid="uid://b8ev7s1pnlfhj" path="res://assets/spr_background_space.png" id="1_m4x67"]
+[ext_resource type="Script" path="res://scripts/Spaceman.gd" id="2_mbu16"]
+[ext_resource type="Texture2D" uid="uid://dxbp8tguy5x8l" path="res://assets/Spaceman/spr_spaceman_2.png" id="2_yqr70"]
+[ext_resource type="Texture2D" uid="uid://bwjceokc3v7be" path="res://assets/Spaceman/spr_spaceman_3.png" id="3_botnc"]
+[ext_resource type="Texture2D" uid="uid://pnxtswbjg7va" path="res://assets/Spaceman/spr_spaceman_4.png" id="4_e7vpn"]
+[ext_resource type="Texture2D" uid="uid://eo88qfe3duyc" path="res://assets/Spaceman/spr_spaceman_5.png" id="5_88ss6"]
+[ext_resource type="PackedScene" uid="uid://bbfrd7aems1to" path="res://scenes/meteor.tscn" id="8_ifwcn"]
+[ext_resource type="Script" path="res://scripts/Generator.gd" id="10_aicwn"]
+[ext_resource type="AudioStream" uid="uid://cexa2swvf3tjt" path="res://sound/effects/score.ogg" id="11_t22vm"]
+[ext_resource type="AudioStream" uid="uid://tl6f0yvba6vs" path="res://sound/effects/hit.ogg" id="12_7146y"]
+[ext_resource type="AudioStream" uid="uid://dcs4uusrngjnn" path="res://sound/effects/jetpack.ogg" id="13_08dwx"]
+[ext_resource type="AudioStream" uid="uid://ctfh04887ye4x" path="res://sound/music/batchbug-sweet-dreams.ogg" id="14_afgx1"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_5q8vt"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_7efl4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_yqr70")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_botnc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_e7vpn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_88ss6")
+}],
+"loop": true,
+"name": &"default",
+"speed": 7.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6vy4y"]
+radius = 57.0
+height = 184.0
+
+[sub_resource type="SegmentShape2D" id="SegmentShape2D_vb0ug"]
+b = Vector2(900, 0)
+
+[node name="GameNode" type="Node2D"]
+script = ExtResource("1_6yahp")
+
+[node name="BackgroundImage" type="Sprite2D" parent="."]
+scale = Vector2(1.40625, 1.875)
+texture = ExtResource("1_m4x67")
+centered = false
+
+[node name="Spaceman" type="RigidBody2D" parent="."]
+z_index = 1
+position = Vector2(150, 900)
+script = ExtResource("2_mbu16")
+
+[node name="SpacemanAnimation" type="AnimatedSprite2D" parent="Spaceman"]
+sprite_frames = SubResource("SpriteFrames_5q8vt")
+autoplay = "default"
+
+[node name="SpacemanShape" type="CollisionShape2D" parent="Spaceman"]
+position = Vector2(22, -4)
+shape = SubResource("CapsuleShape2D_6vy4y")
+
+[node name="JetpackSound" type="AudioStreamPlayer" parent="Spaceman"]
+stream = ExtResource("13_08dwx")
+
+[node name="Limits" type="Area2D" parent="."]
+
+[node name="Upper" type="CollisionShape2D" parent="Limits"]
+shape = SubResource("SegmentShape2D_vb0ug")
+
+[node name="Lower" type="CollisionShape2D" parent="Limits"]
+position = Vector2(0, 1800)
+shape = SubResource("SegmentShape2D_vb0ug")
+
+[node name="Meteors" type="Node2D" parent="."]
+
+[node name="Meteor" parent="Meteors" instance=ExtResource("8_ifwcn")]
+position = Vector2(1100, 900)
+
+[node name="Generator" type="Marker2D" parent="Meteors"]
+position = Vector2(1100, 900)
+script = ExtResource("10_aicwn")
+
+[node name="Timer" type="Timer" parent="Meteors/Generator"]
+wait_time = 1.75
+autostart = true
+
+[node name="Score" type="Node2D" parent="."]
+z_index = 1
+
+[node name="PointsLabel" type="Label" parent="Score"]
+offset_top = 56.0
+offset_right = 900.0
+offset_bottom = 193.0
+theme_override_font_sizes/font_size = 100
+text = "0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GameOverScreen" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Credits" type="Control" parent="GameOverScreen"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="CreditsLabel" type="Label" parent="GameOverScreen/Credits"]
+layout_mode = 0
+offset_top = 325.0
+offset_right = 900.0
+offset_bottom = 612.0
+theme_override_font_sizes/font_size = 40
+text = "Credits
+
+Created by Salomão Lima
+Assets by Enmanuelle Ferreira
+Music by BatchBug"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SpecialThanksLabel" type="Label" parent="GameOverScreen/Credits"]
+layout_mode = 0
+offset_top = 1195.0
+offset_right = 900.0
+offset_bottom = 1482.0
+theme_override_font_sizes/font_size = 40
+text = "Special Thanks
+
+Nathalia Crepaldi
+Taylor Costa
+And thank you for playing!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PoweredByLabel" type="Label" parent="GameOverScreen/Credits"]
+layout_mode = 0
+offset_top = 1744.0
+offset_right = 900.0
+offset_bottom = 1799.0
+theme_override_font_sizes/font_size = 40
+text = "Powered by Godot Engine"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Buttons" type="Control" parent="GameOverScreen"]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="RestartButton" type="Button" parent="GameOverScreen/Buttons"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 775.0
+offset_right = 340.0
+offset_bottom = 815.0
+scale = Vector2(3, 3)
+text = "RESTART GAME"
+
+[node name="QuitButton" type="Button" parent="GameOverScreen/Buttons"]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 925.0
+offset_right = 340.0
+offset_bottom = 965.0
+scale = Vector2(3, 3)
+text = "QUIT"
+
+[node name="Sound" type="Node2D" parent="."]
+visible = false
+
+[node name="ScoreSound" type="AudioStreamPlayer" parent="Sound"]
+stream = ExtResource("11_t22vm")
+
+[node name="HitSound" type="AudioStreamPlayer" parent="Sound"]
+stream = ExtResource("12_7146y")
+
+[node name="MainTheme" type="AudioStreamPlayer" parent="Sound"]
+stream = ExtResource("14_afgx1")
+
+[connection signal="body_entered" from="Limits" to="." method="_on_limits_body_entered"]
+[connection signal="timeout" from="Meteors/Generator/Timer" to="Meteors/Generator" method="_on_timer_timeout"]
+[connection signal="gui_input" from="GameOverScreen/Buttons/RestartButton" to="." method="_on_restart_button_gui_input"]
+[connection signal="gui_input" from="GameOverScreen/Buttons/QuitButton" to="." method="_on_quit_button_gui_input"]
