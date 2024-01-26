@@ -104,13 +104,13 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="GameOverScreen" type="Control" parent="."]
-visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
 [node name="Credits" type="Control" parent="GameOverScreen"]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -154,7 +154,18 @@ text = "Powered by Godot Engine"
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="ShowRankingButton" type="Button" parent="GameOverScreen"]
+visible = false
+layout_mode = 0
+offset_left = 120.0
+offset_top = 700.0
+offset_right = 780.0
+offset_bottom = 820.0
+theme_override_font_sizes/font_size = 50
+text = "SHOW RANKING"
+
 [node name="Buttons" type="Control" parent="GameOverScreen"]
+visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
@@ -162,23 +173,97 @@ offset_bottom = 40.0
 [node name="RestartButton" type="Button" parent="GameOverScreen/Buttons"]
 layout_mode = 0
 offset_left = 120.0
-offset_top = 775.0
-offset_right = 340.0
-offset_bottom = 815.0
-scale = Vector2(3, 3)
+offset_top = 850.0
+offset_right = 780.0
+offset_bottom = 970.0
+theme_override_font_sizes/font_size = 50
 text = "RESTART GAME"
 
 [node name="QuitButton" type="Button" parent="GameOverScreen/Buttons"]
 layout_mode = 0
 offset_left = 120.0
-offset_top = 925.0
-offset_right = 340.0
-offset_bottom = 965.0
-scale = Vector2(3, 3)
+offset_top = 1000.0
+offset_right = 780.0
+offset_bottom = 1120.0
+theme_override_font_sizes/font_size = 50
 text = "QUIT"
 
-[node name="Sound" type="Node2D" parent="."]
+[node name="RestartGameTimer" type="Timer" parent="GameOverScreen"]
+wait_time = 3.0
+one_shot = true
+
+[node name="RankingWindow" type="Window" parent="."]
+initial_position = 1
+size = Vector2i(800, 1200)
 visible = false
+unresizable = true
+popup_window = true
+
+[node name="TopScoresLabel" type="Label" parent="RankingWindow"]
+offset_left = 250.0
+offset_top = 50.0
+offset_right = 550.0
+offset_bottom = 125.0
+theme_override_font_sizes/font_size = 50
+text = "Top Scores"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RankingContainer" type="GridContainer" parent="RankingWindow"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -27.5
+offset_right = 20.0
+offset_bottom = 27.5
+grow_horizontal = 2
+grow_vertical = 2
+columns = 3
+
+[node name="Positions" type="Label" parent="RankingWindow/RankingContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+vertical_alignment = 1
+
+[node name="Players" type="Label" parent="RankingWindow/RankingContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Scores" type="Label" parent="RankingWindow/RankingContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ShowRankingTimer" type="Timer" parent="RankingWindow"]
+wait_time = 5.0
+one_shot = true
+
+[node name="BackButton" type="Button" parent="RankingWindow"]
+offset_left = 250.0
+offset_top = 1050.0
+offset_right = 550.0
+offset_bottom = 1125.0
+theme_override_font_sizes/font_size = 40
+text = "BACK"
+
+[node name="LoadingLabel" type="Label" parent="."]
+visible = false
+offset_left = 120.0
+offset_top = 850.0
+offset_right = 780.0
+offset_bottom = 970.0
+theme_override_font_sizes/font_size = 50
+text = "Loading..."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Sound" type="Node2D" parent="."]
 
 [node name="ScoreSound" type="AudioStreamPlayer" parent="Sound"]
 stream = ExtResource("11_t22vm")
@@ -191,5 +276,10 @@ stream = ExtResource("14_afgx1")
 
 [connection signal="body_entered" from="Limits" to="." method="_on_limits_body_entered"]
 [connection signal="timeout" from="Meteors/Generator/Timer" to="Meteors/Generator" method="_on_timer_timeout"]
+[connection signal="gui_input" from="GameOverScreen/ShowRankingButton" to="." method="_on_show_ranking_button_gui_input"]
 [connection signal="gui_input" from="GameOverScreen/Buttons/RestartButton" to="." method="_on_restart_button_gui_input"]
 [connection signal="gui_input" from="GameOverScreen/Buttons/QuitButton" to="." method="_on_quit_button_gui_input"]
+[connection signal="timeout" from="GameOverScreen/RestartGameTimer" to="." method="_on_restart_game_timer_timeout"]
+[connection signal="close_requested" from="RankingWindow" to="." method="_on_ranking_window_close_requested"]
+[connection signal="timeout" from="RankingWindow/ShowRankingTimer" to="." method="_on_show_ranking_timer_timeout"]
+[connection signal="gui_input" from="RankingWindow/BackButton" to="." method="_on_back_button_gui_input"]

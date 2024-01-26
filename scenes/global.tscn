@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://txrt1w4jtnwi"]
+
+[ext_resource type="Script" path="res://scripts/Global.gd" id="1_3aodp"]
+[ext_resource type="Script" path="res://scripts/HttpRequests/Auth.gd" id="2_emedy"]
+[ext_resource type="Script" path="res://scripts/HttpRequests/SubmitScore.gd" id="3_o7bgv"]
+[ext_resource type="Script" path="res://scripts/HttpRequests/GetRanking.gd" id="4_qpyps"]
+
+[node name="Global" type="Node2D"]
+script = ExtResource("1_3aodp")
+
+[node name="RegenerateToken" type="Timer" parent="."]
+wait_time = 885.0
+
+[node name="Auth" type="Node" parent="."]
+script = ExtResource("2_emedy")
+
+[node name="HTTPRequest" type="HTTPRequest" parent="Auth"]
+
+[node name="SubmitScore" type="Node" parent="."]
+script = ExtResource("3_o7bgv")
+
+[node name="HTTPRequest" type="HTTPRequest" parent="SubmitScore"]
+
+[node name="GetRanking" type="Node" parent="."]
+script = ExtResource("4_qpyps")
+
+[node name="HTTPRequest" type="HTTPRequest" parent="GetRanking"]
+
+[connection signal="timeout" from="RegenerateToken" to="." method="_on_regenerate_token_timeout"]

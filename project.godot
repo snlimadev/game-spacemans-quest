@@ -11,9 +11,14 @@ config_version=5
 [application]
 
 config/name="SpacemansQuest"
-run/main_scene="res://scenes/game_node.tscn"
+run/main_scene="res://scenes/main.tscn"
 config/features=PackedStringArray("4.2", "Mobile")
 config/icon="res://icon.svg"
+
+[autoload]
+
+env="*res://env.gd"
+Global="*res://scenes/global.tscn"
 
 [display]
 
@@ -26,7 +31,6 @@ window/handheld/orientation=1
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
-pointing/emulate_mouse_from_touch=false
 
 [physics]
 
