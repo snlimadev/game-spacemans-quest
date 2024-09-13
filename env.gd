@@ -1,5 +1,4 @@
 extends Node
 
-# Username and password have been omitted
-var username = ""
-var password = ""
+var username = OS.get_environment("GODOT_SPACEMAN_USERNAME")
+var password = OS.get_environment("GODOT_SPACEMAN_PASSWORD")
